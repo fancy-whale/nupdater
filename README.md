@@ -13,3 +13,7 @@ Nupdater is a script that ensures your nushell environment is always up to date.
 
 ## Installation
 
+### Available Commands:
+
+nupdate_check_modules: Checks for updates for all installed modules.
+nupdate_modules: Updates all installed modules. (by default in the modules folder)

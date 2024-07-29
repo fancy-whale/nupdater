@@ -18,7 +18,7 @@ if not ($last_run | path exists) {
     if ($time_since_last_run > $cadence) {
         print "Checking for updates"
         let $results = (nupdate_modules)
-        date now | save $last_run
+        date now | save -f $last_run
         return $results
     } else {
         print $"Last run was less than ($cadence) ago, skipping"

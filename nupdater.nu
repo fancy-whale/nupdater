@@ -1,3 +1,5 @@
+use std log 
+
 # Get the cadence of updates from the NUPDATER_CADENCE env var, set to 1day if not set
 let $cadence = 1day
 if ("NUPDATER_CADENCE" in $env) {
@@ -8,7 +10,7 @@ if ("NUPDATER_CADENCE" in $env) {
 let $last_run = ($nu.default-config-dir | path join "scripts/nupdater_last_run")
 
 if not ($last_run | path exists) {
-    print "First run, updating all modules"
+    log info "First run, updating all modules"
     let $results = (nupdate_modules)
     date now | save -f $last_run
     return $results
@@ -16,12 +18,12 @@ if not ($last_run | path exists) {
     let $last_run_time = (open $last_run | into datetime )
     let $time_since_last_run = ((date now) - $last_run_time)
     if ($time_since_last_run > $cadence) {
-        print "Checking for updates"
+        log debug "Checking for updates"
         let $results = (nupdate_modules)
         date now | save -f $last_run
         return $results
     } else {
-        print $"Last run was less than ($cadence) ago, skipping"
+        log debug $"Last run was less than ($cadence) ago, skipping"
     }
 }
 
@@ -31,14 +33,14 @@ export def nupdate_check_modules [] {
     for module in (ls ($nu.default-config-dir | path join "modules") | get name) {
         # Check if it's a git repo, continue otherwise
         if not ($"($module)/.git" | path exists) {
-            print $"Skipping module ($module | path split | last) as it is not a git repo"
+            log debug $"Skipping module ($module | path split | last) as it is not a git repo"
             continue
         }
 
         # check the branch of the folder
         let branch = git -C $module branch --show-current
 
-        print $"Checking module ($module | path split | last) on branch ($branch)"
+        log debug $"Checking module ($module | path split | last) on branch ($branch)"
         git remote update
         # Check how many changes are there in the module
         let changes = (git -C $module rev-list --count HEAD..$"origin/($branch)")
@@ -53,14 +55,14 @@ export def nupdate_modules [] {
     for module in (ls ($nu.default-config-dir | path join "modules") | get name) {
         # Check if it's a git repo, continue otherwise
         if not ($"($module)/.git" | path exists) {
-            print $"Skipping module ($module | path split | last) as it is not a git repo"
+            log debug $"Skipping module ($module | path split | last) as it is not a git repo"
             continue
         }
 
         # check the branch of the folder
         let branch = git -C $module branch --show-current
 
-        print $"Updating module ($module | path split | last) on branch ($branch)"
+        log debug $"Updating module ($module | path split | last) on branch ($branch)"
         # Check how many changes are there in the module
         let changes = (git -C $module rev-list --count HEAD..$"origin/($branch)")
         # do git pull on each folder in $nu.default-config-dir, check if it is up to date

@@ -49,12 +49,24 @@ export def nupdate_check_modules [] {
     return $module_updates
 }
 
+def confirm_intent []: nothing -> bool {
+    let $user_input = (input "Do you want to update the modules? (Y/n)")
+    if (($user_input | str downcase) == "y") {
+        return true
+    } else {
+        return false
+    }
+}
+
 export def nupdate_modules [] {
     # loop through all the packages in $nu.default-config-dir
+    if not (confirm_intent) {
+        return []
+    }
     mut $module_updates = []
     for module in (ls ($nu.default-config-dir | path join "modules") | get name) {
         # Check if it's a git repo, continue otherwise
-        if not ($"($module)/.git" | path exists) {
+        if not (($module | path join ".git") | path exists) {
             log debug $"Skipping module ($module | path split | last) as it is not a git repo"
             continue
         }

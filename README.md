@@ -13,7 +13,14 @@ Nupdater is a script that ensures your nushell environment is always up to date.
 
 ## Installation
 
-### Available Commands:
+To install nupdater, you can clone this repository into your nushell scripts folder and sourcing the `nupdater.nu` script in your nu config file:
+
+```bash
+git clone https://github.com/fancy-whale/nupdater.git ($nu.default-config-dir | path join scripts/nupdater)
+echo "source nupdater/nupdater.nu\n" | save --append $nu.config-path
+```
+
+## Available Commands:
 
 nupdate_check_modules: Checks for updates for all installed modules.
 nupdate_modules: Updates all installed modules. (by default in the modules folder)

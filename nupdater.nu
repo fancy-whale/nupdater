@@ -83,4 +83,3 @@ export def nupdate_modules [] {
     }
     return $module_updates
 }
-

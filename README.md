@@ -17,7 +17,7 @@ To install nupdater, you can clone this repository into your nushell scripts fol
 
 ```bash
 git clone https://github.com/fancy-whale/nupdater.git ($nu.default-config-dir | path join scripts/nupdater)
-echo "source nupdater/nupdater.nu\n" | save --append $nu.config-path
+echo "\nsource nupdater/nupdater.nu" | save --append $nu.config-path
 ```
 
 ## Available Commands:
